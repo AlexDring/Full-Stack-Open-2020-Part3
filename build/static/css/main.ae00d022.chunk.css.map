@@ -1,0 +1,1 @@
+{"version":3,"sources":["webpack://src/index.css"],"names":[],"mappings":"AAAA,GACE,WAAY,CACZ,iBACF","file":"main.ae00d022.chunk.css","sourcesContent":["h1 {\n  color: green;\n  font-style: italic;\n}"]}
