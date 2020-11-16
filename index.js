@@ -10,6 +10,7 @@ app.use(express.static('build'))
 app.use(cors())
 app.use(logger)
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :content'))
+// eslint-disable-next-line no-unused-vars
 morgan.token('content', function (req, res) { return JSON.stringify(req.body) })
 
 function logger(request, response, next) {
@@ -21,7 +22,81 @@ function logger(request, response, next) {
   next()
 }
 
+// Exercises 3.1 - 3.9 below
+// let persons = [
+//   {
+//     name: 'Alex Dring',
+//     number: '07982718898',
+//     id: 1
+//   },
+//   {
+//     name: 'Grace Flavin',
+//     number: '0798271882344',
+//     id: 2
+//   },
+//   {
+//     name: 'Grace Flaving',
+//     number: '0798271883444',
+//     id: 3
+//   }
+// ]
+
+// app.get('/api/persons', (request, response) => {
+//   response.json(persons)
+// })
+
+// app.get('/info', (request, response) => {
+//   response.send(`
+//     <p>Phone book has info for ${persons.length} people</p>
+//     <p>${new Date()}</p>
+//     `)
+// })
+
+// app.get('/api/persons/:id', (request, response) => {
+//   const id = Number(request.params.id)
+//   const person = persons.find(person => person.id === id)
+//   response.json(person)
+// })
+
+// app.post('/api/persons', (request, response) => {
+
+//   function generateId(min, max) {
+//     return Math.random() * (max - min) + min
+//   }
+
+//   const person = request.body
+
+//   if ((!person.name) || (!person.number)) {
+//     return response.status(400).json({
+//       error: 'content missing'
+//     })
+//   } else if (persons.some(p => p.name === person.name)) {
+//     return response.status(400).json({
+//       error: 'name must be unique'
+//     })
+//   }
+
+//   const newPerson = {
+//     name: person.name,
+//     number: person.number,
+//     id: generateId(persons.length, (persons.length + 1))
+//   }
+
+//   persons = persons.concat(newPerson)
+//   response.json(person)
+// })
+
+// app.delete('/api/persons/:id', (request, response) => {
+//   const id = Number(request.params.id)
+//   persons = persons.filter(person => person.id !== id)
+
+//   response.status(204).end()
+// })
+
+///////////////////
+
 app.get('/api/persons', (request, response, next) => {
+  console.log('get-persons', request.body)
   Person.find({})
     .then(person => {
       response.json(person)
@@ -57,13 +132,6 @@ app.post('/api/persons', (request, response, next) => {
     .catch(error => next(error))
 })
 
-app.get('/info', (request, response) => {
-  response.send(`
-    <p>Phone book has info for ${persons.length} people</p> 
-    <p>${new Date()}</p>
-    `)
-})
-
 app.put('/api/persons/:id', (request, response, next) => {
   const body = request.body
   const person = {
@@ -86,7 +154,7 @@ app.delete('/api/persons/:id', (request, response) => {
 })
 
 const errorHandler = (error, request, response, next) => {
-  console.error('assda', error.message)
+  console.error('error message', error.message)
 
   if (error.name === 'CastError') {
     return response.status(400).send({ error: 'malformatted id' })
@@ -99,6 +167,7 @@ const errorHandler = (error, request, response, next) => {
 
 app.use(errorHandler)
 
+// eslint-disable-next-line no-undef
 const PORT = process.env.PORT
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
